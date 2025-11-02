@@ -57,7 +57,7 @@ export const AppLayout = () => {
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6 sm:py-4">
           <Link to="/" className="flex items-center gap-2">
             <div className="rounded-full bg-gold-500 p-1.5 shadow-card sm:p-2">
-              <span className="text-base font-semibold text-white sm:text-lg">PB</span>
+              <span className="text-base font-semibold text-white sm:text-lg">A²</span>
             </div>
             <div className="font-display text-base text-ink dark:text-white sm:text-xl">
               <span className="hidden sm:inline">Abi & Amar Pawn Shop</span>
