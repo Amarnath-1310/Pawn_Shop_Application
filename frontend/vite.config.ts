@@ -68,8 +68,10 @@ export default defineConfig({
         }
       }
     },
-    chunkSizeWarningLimit: 1000
+    chunkSizeWarningLimit: 1000,
+    copyPublicDir: true
   },
+  publicDir: 'public',
   server: {
     port: 5173,
   },

@@ -48,6 +48,20 @@ functions:
           path: /auth/register
           method: post
           cors: true
+  requestOTP:
+    handler: dist/index.requestOTPHandler
+    events:
+      - http:
+          path: /auth/otp/request
+          method: post
+          cors: true
+  verifyOTP:
+    handler: dist/index.verifyOTPHandler
+    events:
+      - http:
+          path: /auth/otp/verify
+          method: post
+          cors: true
   listCustomers:
     handler: dist/index.listCustomersHandler
     events:

@@ -39,18 +39,7 @@ class InMemoryUserRepository implements UserRepository {
   private readonly users = new Map<string, UserRecord>()
 
   constructor() {
-    const now = new Date().toISOString()
-    const demoUser: UserRecord = {
-      id: 'user-demo-1',
-      email: 'demo@regalpawn.com',
-      firstName: 'Ava',
-      lastName: 'Stein',
-      role: 'admin',
-      passwordHash: bcrypt.hashSync('Password123!', 10),
-      createdAt: now,
-      updatedAt: now,
-    }
-    this.users.set(demoUser.email.toLowerCase(), demoUser)
+    // No demo data - users must be registered
   }
 
   async findByEmail(email: string): Promise<UserRecord | null> {

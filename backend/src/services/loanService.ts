@@ -5,6 +5,7 @@ import { getLoanRepository } from '../repositories/loanRepository.js'
 import { getRepaymentRepository } from '../repositories/repaymentRepository.js'
 import type { LoanPublic, LoanRecord, LoanStatus } from '../types/loan.js'
 import type { RepaymentRecord } from '../types/repayment.js'
+import { sendSMS, generateLoanSMS, generatePaymentSMS } from '../lib/sms.js'
 
 const createSchema = z.object({
   customerId: z.string().min(1, 'Customer is required'),
@@ -176,6 +177,26 @@ export const createLoan = async (input: unknown): Promise<LoanPublic> => {
   })
 
   const [loan] = await enrichLoans([record])
+  
+  // Send SMS notification to customer
+  if (customer.phone) {
+    try {
+      const smsMessage = generateLoanSMS(
+        `${customer.firstName} ${customer.lastName}`,
+        data.principal,
+        new Date(startDate).toLocaleDateString('en-GB'),
+        data.itemDescription
+      )
+      await sendSMS({
+        to: customer.phone,
+        message: smsMessage,
+      })
+    } catch (smsError) {
+      console.error('Failed to send loan SMS:', smsError)
+      // Continue even if SMS fails
+    }
+  }
+  
   return loan
 }
 
@@ -246,6 +267,26 @@ export const recordRepayment = async (input: unknown): Promise<{
       status: repositoryStatus,
     },
   ])
+
+  // Send SMS notification to customer
+  const customer = updatedLoan.customer
+  if (customer && customer.phone) {
+    try {
+      const smsMessage = generatePaymentSMS(
+        `${customer.firstName} ${customer.lastName}`,
+        data.amount,
+        new Date(paidAt).toLocaleDateString('en-GB'),
+        loan.id
+      )
+      await sendSMS({
+        to: customer.phone,
+        message: smsMessage,
+      })
+    } catch (smsError) {
+      console.error('Failed to send repayment SMS:', smsError)
+      // Continue even if SMS fails
+    }
+  }
 
   return { repayment, loan: latestLoan }
 }

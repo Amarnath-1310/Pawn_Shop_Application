@@ -33,7 +33,7 @@ const toPublicUser = (user: UserRecord): PublicUser => ({
   role: user.role,
 })
 
-const signToken = (user: PublicUser) => {
+export const signToken = (user: PublicUser) => {
   const secret = config.jwtSecret as Secret
   const expiresIn = config.jwtExpiresIn as SignOptions['expiresIn']
   return jwt.sign(

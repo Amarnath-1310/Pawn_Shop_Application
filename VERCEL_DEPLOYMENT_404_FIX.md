@@ -1,9 +1,14 @@
-# Vercel 404 Error - Fixed ✅
+# Vercel Build & 404 Error - Fixed ✅
 
 ## Issues Fixed
 
 ### ✅ Logo Updated
 - Changed logo from "PB" to "A²" in `AppLayout.tsx`
+
+### ✅ Vercel Build Error Fixed
+- **Problem**: `vite: command not found` - Vercel was trying to run `vite build` directly
+- **Solution**: Created root-level `package.json` with proper build script
+- **Solution**: Configured Vercel to use `npm run build` instead
 
 ### ✅ Vercel Configuration Fixed
 - Updated `frontend/vercel.json` with proper SPA routing
@@ -22,22 +27,32 @@ To fix the 404 error, ensure these settings in your Vercel dashboard:
 4. Select **frontend** as the root directory
 5. Save settings
 
-**Build Settings:**
-- **Framework Preset**: Vite
-- **Build Command**: `npm run build` (auto-detected)
+**Build Settings (should auto-detect):**
+- **Framework Preset**: Vite (or Other)
+- **Build Command**: `npm run build` (should auto-detect as `tsc && vite build`)
 - **Output Directory**: `dist` (auto-detected)
 - **Install Command**: `npm install` (auto-detected)
+
+**If auto-detection fails, manually set:**
+- **Build Command**: `npm run build`
+- **Output Directory**: `dist`
 
 ### Option 2: Deploy from Repository Root
 
 If you want to deploy from the repository root:
 
-1. Keep the root-level `vercel.json` (already created)
+1. Keep the root-level `vercel.json` and `package.json` (already created)
 2. In Vercel dashboard:
    - **Root Directory**: Leave as `/` (root)
-   - **Build Command**: `cd frontend && npm run build`
+   - **Framework Preset**: Other
+   - **Build Command**: `npm run build` (uses root package.json which runs frontend build)
    - **Output Directory**: `frontend/dist`
-   - **Install Command**: `cd frontend && npm install`
+   - **Install Command**: `npm install` (or leave empty, root package.json handles it)
+
+**Alternative manual commands:**
+- **Build Command**: `cd frontend && npm install && npm run build`
+- **Output Directory**: `frontend/dist`
+- **Install Command**: (leave empty or use `cd frontend && npm install`)
 
 ## Verification
 
@@ -47,21 +62,24 @@ After deployment, verify:
 - ✅ All routes are accessible
 - ✅ Static assets load correctly
 
-## Common 404 Causes & Solutions
+## Common Build Error Causes & Solutions
 
-| Issue | Solution |
-|-------|----------|
-| Root Directory not set | Set to `frontend` in Vercel dashboard |
-| Build Output Directory wrong | Set to `dist` |
-| Framework preset wrong | Set to `Vite` |
-| Missing vercel.json | Should be in root or frontend folder |
-| Rewrites not working | Verify vercel.json has proper rewrites |
+| Error | Cause | Solution |
+|-------|-------|----------|
+| `vite: command not found` | Vercel running `vite build` directly | Set Build Command to `npm run build` |
+| `Command "vite build" exited with 127` | Dependencies not installed | Ensure Install Command runs before build |
+| Root Directory not set | Building from wrong directory | Set to `frontend` in Vercel dashboard |
+| Build Output Directory wrong | Output not in expected location | Set to `dist` or `frontend/dist` |
+| Framework preset wrong | Auto-detection failed | Set to `Vite` or `Other` manually |
+| Missing vercel.json | No routing configuration | Should be in root or frontend folder |
+| Rewrites not working | SPA routing broken | Verify vercel.json has proper rewrites |
 
 ## Files Changed
 
 1. ✅ `frontend/src/components/layout/AppLayout.tsx` - Logo changed to A²
 2. ✅ `frontend/vercel.json` - SPA routing configuration
 3. ✅ `vercel.json` (root) - Root-level deployment configuration
+4. ✅ `package.json` (root) - Build script for root-level deployments
 
 ## Next Steps
 

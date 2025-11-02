@@ -1,4 +1,5 @@
 export { loginHandler, registerHandler } from './handlers/auth.js'
+export { requestOTPHandler, verifyOTPHandler } from './handlers/otp.js'
 export {
   createCustomerHandler,
   deleteCustomerHandler,

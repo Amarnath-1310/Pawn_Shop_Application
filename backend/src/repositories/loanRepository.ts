@@ -81,61 +81,7 @@ class InMemoryLoanRepository implements LoanRepository {
   private readonly loans = new Map<string, LoanRecord>()
 
   constructor() {
-    const now = new Date().toISOString()
-    const yesterday = new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString()
-    const lastWeek = new Date(Date.now() - 1000 * 60 * 60 * 24 * 7).toISOString()
-    
-    // Current loan
-    const loan1: LoanRecord = {
-      id: 'loan-demo-1',
-      customerId: 'cust-demo-1',
-      itemDescription: '14k Gold Chain',
-      principal: 650,
-      interestRate: 0.15,
-      totalPayable: 650 + (650 * 0.15 * 1), // principal + (principal * interestRate * durationMonths)
-      startDate: now,
-      dueDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30).toISOString(), // 1 month from now
-      status: 'ACTIVE',
-      notes: 'Customer requested appraisal on pickup',
-      createdAt: now,
-      updatedAt: now,
-    }
-    
-    // Yesterday's loan
-    const loan2: LoanRecord = {
-      id: 'loan-demo-2',
-      customerId: 'cust-demo-1',
-      itemDescription: 'Silver Ring Set',
-      principal: 300,
-      interestRate: 0.12,
-      totalPayable: 300 + (300 * 0.12 * 1),
-      startDate: yesterday,
-      dueDate: new Date(Date.now() - 1000 * 60 * 60 * 24 + 1000 * 60 * 60 * 24 * 30).toISOString(),
-      status: 'ACTIVE',
-      notes: 'Antique silver ring collection',
-      createdAt: yesterday,
-      updatedAt: yesterday,
-    }
-    
-    // Last week's loan
-    const loan3: LoanRecord = {
-      id: 'loan-demo-3',
-      customerId: 'cust-demo-1',
-      itemDescription: 'Diamond Earrings',
-      principal: 1200,
-      interestRate: 0.18,
-      totalPayable: 1200 + (1200 * 0.18 * 1),
-      startDate: lastWeek,
-      dueDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 7 + 1000 * 60 * 60 * 24 * 30).toISOString(),
-      status: 'REDEEMED',
-      notes: 'Premium diamond jewelry',
-      createdAt: lastWeek,
-      updatedAt: lastWeek,
-    }
-    
-    this.loans.set(loan1.id, loan1)
-    this.loans.set(loan2.id, loan2)
-    this.loans.set(loan3.id, loan3)
+    // No demo data - start with empty repository
   }
 
   async list(): Promise<LoanRecord[]> {

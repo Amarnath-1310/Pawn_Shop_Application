@@ -109,17 +109,7 @@ class InMemoryCustomerRepository implements CustomerRepository {
   private readonly customers = new Map<string, CustomerRecord>()
 
   constructor() {
-    const now = new Date().toISOString()
-    const demoCustomer: CustomerRecord = {
-      id: 'cust-demo-1',
-      firstName: 'Eleanor',
-      lastName: 'Rigby',
-      email: 'eleanor@example.com',
-      phone: '+1 (312) 555-0199',
-      createdAt: now,
-      updatedAt: now,
-    }
-    this.customers.set(demoCustomer.id, demoCustomer)
+    // No demo data - start with empty repository
   }
 
   async list(): Promise<CustomerRecord[]> {
