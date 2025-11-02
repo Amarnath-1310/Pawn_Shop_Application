@@ -1,0 +1,140 @@
+import { useEffect, useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+
+import type { Customer } from '../../features/customers/types'
+import type { CreateLoanPayload } from '../../features/loans/types'
+
+const schema = z.object({
+  customerId: z.string().min(1, 'Customer is required'),
+  itemDescription: z.string().min(1, 'Describe the collateral item'),
+  principal: z
+    .number({ invalid_type_error: 'Enter a principal amount' })
+    .positive('Principal must be greater than zero'),
+  interestRate: z
+    .number({ invalid_type_error: 'Enter an interest rate' })
+    .min(0, 'Rate cannot be negative')
+    .max(100, 'Rate must be entered as a percentage (e.g. 15)'),
+  startDate: z.string().optional(),
+  notes: z.string().max(500, 'Notes cannot exceed 500 characters').optional(),
+})
+
+type FormValues = z.infer<typeof schema>
+
+interface LoanFormProps {
+  customers: Customer[]
+  defaultValues?: Partial<CreateLoanPayload>
+  isSubmitting?: boolean
+  onSubmit: (values: CreateLoanPayload) => void
+}
+
+export const LoanForm = ({ customers, defaultValues, isSubmitting = false, onSubmit }: LoanFormProps) => {
+  const {
+    register,
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FormValues>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      interestRate: 15, // Default to 15%
+      ...defaultValues,
+    },
+  })
+
+  const [searchTerm, setSearchTerm] = useState('')
+  const [filteredCustomers, setFilteredCustomers] = useState(customers)
+
+  // Filter customers based on search term
+  useEffect(() => {
+    if (!searchTerm) {
+      setFilteredCustomers(customers)
+    } else {
+      const term = searchTerm.toLowerCase()
+      const filtered = customers.filter(
+        customer =>
+          customer.firstName.toLowerCase().includes(term) ||
+          customer.lastName.toLowerCase().includes(term)
+      )
+      setFilteredCustomers(filtered)
+    }
+  }, [searchTerm, customers])
+
+  useEffect(() => {
+    if (defaultValues) {
+      reset({
+        interestRate: 15,
+        ...defaultValues,
+      })
+    }
+  }, [defaultValues, reset])
+
+  const handleFormSubmit = (values: FormValues) => {
+    // Convert interest rate from percentage to decimal
+    const payload = {
+      ...values,
+      principal: Number(values.principal),
+      interestRate: Number(values.interestRate) / 100, // Convert percentage to decimal
+    }
+    onSubmit(payload)
+  }
+
+  // Format date as dd/mm/yyyy
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString)
+    return date.toLocaleDateString('en-GB') // This will format as dd/mm/yyyy
+  }
+
+  return (
+    <form
+      className="space-y-5"
+      onSubmit={handleSubmit(handleFormSubmit)}
+    >
+      <div className="grid gap-4 md:grid-cols-2">
+        <div>
+          <label className="block text-xs font-semibold uppercase text-ink/60 dark:text-gray-300" htmlFor="customerId">
+            Customer
+          </label>
+          <div className="mt-1">
+            <input
+              type="text"
+              placeholder="Search customers..."
+              className="w-full rounded-xl border border-gold-200 bg-cream px-3 py-2 text-sm focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            {searchTerm && (
+              <div className="mt-1 max-h-40 overflow-y-auto rounded-xl border border-gold-200 bg-white shadow-lg">
+                {filteredCustomers.map((customer) => (
+                  <div
+                    key={customer.id}
+                    className="cursor-pointer px-3 py-2 hover:bg-gold-100 dark:hover:bg-gray-700"
+                    onClick={() => {
+                      register('customerId').onChange({ target: { value: customer.id } })
+                      setSearchTerm('')
+                    }}
+                  >
+                    {customer.firstName} {customer.lastName}
+                  </div>
+                ))}
+                {filteredCustomers.length === 0 && (
+                  <div className="px-3 py-2 text-gray-500">No customers found</div>
+                )}
+              </div>
+            )}
+            <select
+              id="customerId"
+              className="mt-1 w-full rounded-xl border border-gold-200 bg-cream px-3 py-2 text-sm focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+              {...register('customerId')}
+            >
+              <option value="">Select customer</option>
+              {customers.map((customer) => (
+                <option value={customer.id} key={customer.id} className="dark:bg-gray-700 dark:text-white">
+                  {customer.firstName} {customer.lastName}
+                </option>
+              ))}
+            </select>
+          </div>
+          {errors.customerId && <p className="mt-1 text-xs text-red-600 dark:text-red-400">{errors.customerId.message}</p>
