@@ -55,6 +55,21 @@ export default defineConfig({
       }
     })
   ],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          router: ['react-router-dom'],
+          ui: ['framer-motion', 'lucide-react'],
+          forms: ['react-hook-form', '@hookform/resolvers'],
+          state: ['@reduxjs/toolkit', 'react-redux'],
+          utils: ['axios', 'dayjs', 'zod']
+        }
+      }
+    },
+    chunkSizeWarningLimit: 1000
+  },
   server: {
     port: 5173,
   },

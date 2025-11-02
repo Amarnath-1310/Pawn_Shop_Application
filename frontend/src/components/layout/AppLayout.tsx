@@ -9,7 +9,6 @@ export const AppLayout = () => {
   const [darkMode, setDarkMode] = useState(false)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
 
-
   // Check authentication status
   useEffect(() => {
     const checkAuth = () => {

@@ -1,0 +1,207 @@
+service: pawn-broker-backend
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: ${env:AWS_REGION, 'us-east-1'}
+  environment:
+    AWS_REGION: ${env:AWS_REGION, 'us-east-1'}
+    DYNAMO_USER_TABLE_NAME: ${env:DYNAMO_USER_TABLE_NAME, 'pawn-broker-users'}
+    DYNAMO_CUSTOMER_TABLE_NAME: ${env:DYNAMO_CUSTOMER_TABLE_NAME, 'pawn-broker-customers'}
+    DYNAMO_LOAN_TABLE_NAME: ${env:DYNAMO_LOAN_TABLE_NAME, 'pawn-broker-loans'}
+    DYNAMO_REPAYMENT_TABLE_NAME: ${env:DYNAMO_REPAYMENT_TABLE_NAME, 'pawn-broker-repayments'}
+    JWT_SECRET: ${env:JWT_SECRET}
+    JWT_EXPIRES_IN: ${env:JWT_EXPIRES_IN, '2h'}
+    CORS_ORIGIN: ${env:CORS_ORIGIN, 'http://localhost:5173'}
+    USE_IN_MEMORY_DB: false
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource: 
+            - "arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/${env:DYNAMO_USER_TABLE_NAME, 'pawn-broker-users'}"
+            - "arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/${env:DYNAMO_CUSTOMER_TABLE_NAME, 'pawn-broker-customers'}"
+            - "arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/${env:DYNAMO_LOAN_TABLE_NAME, 'pawn-broker-loans'}"
+            - "arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/${env:DYNAMO_REPAYMENT_TABLE_NAME, 'pawn-broker-repayments'}"
+
+functions:
+  login:
+    handler: dist/index.loginHandler
+    events:
+      - http:
+          path: /auth/login
+          method: post
+          cors: true
+  register:
+    handler: dist/index.registerHandler
+    events:
+      - http:
+          path: /auth/register
+          method: post
+          cors: true
+  listCustomers:
+    handler: dist/index.listCustomersHandler
+    events:
+      - http:
+          path: /customers
+          method: get
+          cors: true
+  createCustomer:
+    handler: dist/index.createCustomerHandler
+    events:
+      - http:
+          path: /customers
+          method: post
+          cors: true
+  updateCustomer:
+    handler: dist/index.updateCustomerHandler
+    events:
+      - http:
+          path: /customers/{id}
+          method: patch
+          cors: true
+  deleteCustomer:
+    handler: dist/index.deleteCustomerHandler
+    events:
+      - http:
+          path: /customers/{id}
+          method: delete
+          cors: true
+  listLoans:
+    handler: dist/index.listLoansHandler
+    events:
+      - http:
+          path: /loans
+          method: get
+          cors: true
+  createLoan:
+    handler: dist/index.createLoanHandler
+    events:
+      - http:
+          path: /loans
+          method: post
+          cors: true
+  getLoan:
+    handler: dist/index.getLoanHandler
+    events:
+      - http:
+          path: /loans/{id}
+          method: get
+          cors: true
+  updateLoanStatus:
+    handler: dist/index.updateLoanStatusHandler
+    events:
+      - http:
+          path: /loans/{id}
+          method: patch
+          cors: true
+  createRepayment:
+    handler: dist/index.createRepaymentHandler
+    events:
+      - http:
+          path: /repayments
+          method: post
+          cors: true
+  listRepayments:
+    handler: dist/index.listRepaymentsHandler
+    events:
+      - http:
+          path: /repayments/{loanId}
+          method: get
+          cors: true
+  syncLoanStatus:
+    handler: dist/index.syncLoanStatusHandler
+    events:
+      - http:
+          path: /loans/sync
+          method: post
+          cors: true
+  getMonthlyReport:
+    handler: dist/index.getMonthlyReportHandler
+    events:
+      - http:
+          path: /reports/monthly
+          method: get
+          cors: true
+
+resources:
+  Resources:
+    UsersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${env:DYNAMO_USER_TABLE_NAME, 'pawn-broker-users'}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+    CustomersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${env:DYNAMO_CUSTOMER_TABLE_NAME, 'pawn-broker-customers'}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+    LoansTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${env:DYNAMO_LOAN_TABLE_NAME, 'pawn-broker-loans'}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+    RepaymentsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${env:DYNAMO_REPAYMENT_TABLE_NAME, 'pawn-broker-repayments'}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: loanId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: loanId-index
+            KeySchema:
+              - AttributeName: loanId
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+        BillingMode: PAY_PER_REQUEST
+
+plugins:
+  - serverless-esbuild
+
+custom:
+  serverless-offline:
+    httpPort: 4000
+  esbuild:
+    bundle: true
+    minify: false
+    sourcemap: true
+    exclude:
+      - aws-sdk
+    target: node18
+    define: {}
+    platform: node
+    concurrency: 10
