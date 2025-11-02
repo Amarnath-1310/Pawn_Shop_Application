@@ -10,7 +10,7 @@ import { router } from './routes/router'
 import { InstallPrompt } from './components/pwa/InstallPrompt'
 
 // Register service worker
-if ('serviceWorker' in navigator) {
+if ('serviceWorker' in navigator && import.meta.env.PROD) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js')
       .then((registration) => {

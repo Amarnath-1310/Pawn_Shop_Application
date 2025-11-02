@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { BarChart3, Users, IndianRupee, CreditCard, FileText, LogOut, Sun, Moon, Menu, X } from 'lucide-react'
+import { BarChart3, Users, IndianRupee, CreditCard, FileText, LogOut, Sun, Moon } from 'lucide-react'
 import { BottomNavigation } from './BottomNavigation'
 
 export const AppLayout = () => {
   const navigate = useNavigate()
   const [darkMode, setDarkMode] = useState(false)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
 
   // Check authentication status
   useEffect(() => {
