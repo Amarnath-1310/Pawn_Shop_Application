@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { CheckCircle, MessageSquare } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import { fetchCustomers, selectCustomers } from '../features/customers/customerSlice'
 import { selectLoans, createLoan } from '../features/loans/loanSlice'
@@ -13,6 +14,7 @@ type Feedback = { type: 'success' | 'error'; message: string } | null
 
 export const LoanCreatePage = () => {
   const dispatch = useAppDispatch()
+  const { t } = useTranslation()
   const customerState = useAppSelector(selectCustomers)
   const loanState = useAppSelector(selectLoans)
   const [feedback, setFeedback] = useState<Feedback>(null)
@@ -90,9 +92,9 @@ export const LoanCreatePage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.5 }}
         >
-          <h1 className="font-display text-2xl text-ink dark:text-white sm:text-3xl">Record new pawn loan</h1>
+          <h1 className="font-display text-2xl text-ink dark:text-white sm:text-3xl">{t('loanCreatePage.title')}</h1>
           <p className="mt-2 max-w-2xl text-sm text-ink/70 dark:text-gray-300">
-            Capture collateral details, financing terms, and due dates in one pass. Each loan automatically links to the selected customer and appears on the dashboard overview.
+            {t('loanCreatePage.description')}
           </p>
         </motion.div>
 
@@ -134,7 +136,7 @@ export const LoanCreatePage = () => {
               animate={{ opacity: 1 }}
             >
               <div className="mr-2 h-3 w-3 animate-spin rounded-full border border-gold-500 border-t-transparent"></div>
-              Loading customers…
+              {t('loanCreatePage.loadingCustomers')}
             </motion.div>
           )}
           {!customerState.items.length && customerState.status === 'succeeded' && (
@@ -143,7 +145,7 @@ export const LoanCreatePage = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
             >
-              Add a customer before recording a loan.
+              {t('loanCreatePage.addCustomerFirst')}
             </motion.p>
           )}
         </motion.div>

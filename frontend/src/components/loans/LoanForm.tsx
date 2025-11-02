@@ -3,27 +3,11 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import { Search, User, IndianRupee, Calendar, FileText } from 'lucide-react'
 
 import type { Customer } from '../../features/customers/types'
 import type { CreateLoanPayload } from '../../features/loans/types'
-
-const schema = z.object({
-  customerId: z.string().min(1, 'Customer is required'),
-  itemDescription: z.string().min(1, 'Describe the collateral item'),
-  principal: z
-    .number({ invalid_type_error: 'Enter a principal amount' })
-    .positive('Principal must be greater than zero'),
-  interestRate: z
-    .number({ invalid_type_error: 'Enter an interest rate' })
-    .min(0, 'Rate cannot be negative')
-    .max(100, 'Rate must be entered as a percentage (e.g. 3)')
-    .int('Interest rate must be a whole number'),
-  startDate: z.string().optional(),
-  notes: z.string().max(500, 'Notes cannot exceed 500 characters').optional(),
-})
-
-type FormValues = z.infer<typeof schema>
 
 interface LoanFormProps {
   customers: Customer[]
@@ -35,6 +19,25 @@ interface LoanFormProps {
 }
 
 export const LoanForm = ({ customers, defaultValues, isSubmitting = false, clearOnSuccess = false, onSubmit, onSuccess }: LoanFormProps) => {
+  const { t } = useTranslation()
+  
+  const schema = z.object({
+    customerId: z.string().min(1, t('loan.customerRequired')),
+    itemDescription: z.string().min(1, t('loan.itemDescriptionRequired')),
+    principal: z
+      .number({ invalid_type_error: t('loan.principalRequired') })
+      .positive(t('loan.principalPositive')),
+    interestRate: z
+      .number({ invalid_type_error: t('loan.interestRateRequired') })
+      .min(0, t('loan.interestRateInvalid'))
+      .max(100, t('loan.interestRateMax'))
+      .int(t('loan.interestRateWhole')),
+    startDate: z.string().optional(),
+    notes: z.string().max(500, t('loan.notesMaxLength')).optional(),
+  })
+
+  type FormValues = z.infer<typeof schema>
+
   const {
     register,
     handleSubmit,
@@ -136,7 +139,7 @@ export const LoanForm = ({ customers, defaultValues, isSubmitting = false, clear
         >
           <label className="flex items-center gap-2 text-xs font-semibold uppercase text-ink/60 dark:text-gray-300" htmlFor="customer-search">
             <User size={14} />
-            Customer
+            {t('loan.customer')}
           </label>
           <div className="relative mt-1">
             <div className="relative">
@@ -144,7 +147,7 @@ export const LoanForm = ({ customers, defaultValues, isSubmitting = false, clear
               <input
                 id="customer-search"
                 type="text"
-                placeholder="Type customer name..."
+                placeholder={t('loan.typeCustomerName')}
                 className="w-full rounded-xl border border-gold-200 bg-cream pl-10 pr-3 py-2 text-sm focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white transition-all duration-300"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -205,14 +208,14 @@ export const LoanForm = ({ customers, defaultValues, isSubmitting = false, clear
         >
           <label className="flex items-center gap-2 text-xs font-semibold uppercase text-ink/60 dark:text-gray-300" htmlFor="itemDescription">
             <FileText size={14} />
-            Item Description
+            {t('loan.itemDescription')}
           </label>
           <input
             id="itemDescription"
             type="text"
             className="mt-1 w-full rounded-xl border border-gold-200 bg-cream px-3 py-2 text-sm focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 transition-all duration-300"
             {...register('itemDescription')}
-            placeholder="e.g. 14k Gold Chain"
+            placeholder={t('loan.itemPlaceholder')}
           />
           {errors.itemDescription && <p className="mt-1 text-xs text-red-600 dark:text-red-400">{errors.itemDescription.message}</p>}
         </motion.div>
@@ -225,7 +228,7 @@ export const LoanForm = ({ customers, defaultValues, isSubmitting = false, clear
         >
           <label className="flex items-center gap-2 text-xs font-semibold uppercase text-ink/60 dark:text-gray-300" htmlFor="principal">
             <IndianRupee size={14} />
-            Principal Amount (₹)
+            {t('loan.principalAmount')}
           </label>
           <input
             id="principal"
@@ -243,7 +246,7 @@ export const LoanForm = ({ customers, defaultValues, isSubmitting = false, clear
           transition={{ delay: 0.4, duration: 0.5 }}
         >
           <label className="flex items-center gap-2 text-xs font-semibold uppercase text-ink/60 dark:text-gray-300" htmlFor="interestRate">
-            📊 Interest Rate (%)
+            📊 {t('loan.interestRate')}
           </label>
           <input
             id="interestRate"
@@ -265,7 +268,7 @@ export const LoanForm = ({ customers, defaultValues, isSubmitting = false, clear
       >
         <label className="flex items-center gap-2 text-xs font-semibold uppercase text-ink/60 dark:text-gray-300" htmlFor="startDate">
           <Calendar size={14} />
-          Start Date (mm/dd/yyyy)
+          {t('loan.startDate')}
         </label>
         <input
           id="startDate"
@@ -282,14 +285,14 @@ export const LoanForm = ({ customers, defaultValues, isSubmitting = false, clear
       >
         <label className="flex items-center gap-2 text-xs font-semibold uppercase text-ink/60 dark:text-gray-300" htmlFor="notes">
           <FileText size={14} />
-          Notes (Optional)
+          {t('loan.notes')}
         </label>
         <textarea
           id="notes"
           rows={3}
           className="mt-1 w-full rounded-xl border border-gold-200 bg-cream px-3 py-2 text-sm focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 transition-all duration-300"
           {...register('notes')}
-          placeholder="Additional details about the loan..."
+          placeholder={t('loan.notesPlaceholder')}
         />
         {errors.notes && <p className="mt-1 text-xs text-red-600 dark:text-red-400">{errors.notes.message}</p>}
       </motion.div>
@@ -307,7 +310,7 @@ export const LoanForm = ({ customers, defaultValues, isSubmitting = false, clear
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
-          {isSubmitting ? 'Creating loan…' : 'Create Loan'}
+          {isSubmitting ? t('loan.creatingLoan') : t('loan.createLoan')}
         </motion.button>
       </motion.div>
     </motion.form>

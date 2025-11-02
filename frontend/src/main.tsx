@@ -5,6 +5,7 @@ import { RouterProvider } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 
 import './index.css'
+import './lib/i18n'
 import { store } from './store/store'
 import { router } from './routes/router'
 import { InstallPrompt } from './components/pwa/InstallPrompt'

@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import { TrendingUp, Users, IndianRupee } from 'lucide-react'
 
 import { fetchCustomers } from '../features/customers/customerSlice'
@@ -19,6 +20,7 @@ const dueTone = (daysUntilDue: number, status: string) => {
 
 export const DashboardPage = () => {
   const dispatch = useAppDispatch()
+  const { t } = useTranslation()
   const loanState = useAppSelector(selectLoans)
 
   useEffect(() => {
@@ -30,10 +32,10 @@ export const DashboardPage = () => {
   }, [dispatch, loanState.status])
   const greeting = useMemo(() => {
     const currentHour = new Date().getHours()
-    if (currentHour < 12) return 'Good morning'
-    if (currentHour < 17) return 'Good afternoon'
-    return 'Good evening'
-  }, [])
+    if (currentHour < 12) return t('dashboard.greeting.morning')
+    if (currentHour < 17) return t('dashboard.greeting.afternoon')
+    return t('dashboard.greeting.evening')
+  }, [t])
 
   const metrics = useMemo(() => {
     const activeLoans = loanState.items.filter((loan) => loan.status === 'ACTIVE' || loan.status === 'LATE')
@@ -67,7 +69,7 @@ export const DashboardPage = () => {
           {greeting}, Sivakumar
         </h1>
         <p className="mt-2 max-w-2xl text-sm text-ink/70">
-          Monitor loan performance, upcoming maturities, and relationship insights at a glance. All data reflects the most recent activity across your pawn operations.
+          {t('dashboard.description')}
         </p>
         <div className="mt-8 grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           <motion.div 
@@ -79,10 +81,10 @@ export const DashboardPage = () => {
           >
             <div className="flex items-center gap-2">
               <TrendingUp className="text-gold-600" size={20} />
-              <p className="text-xs font-semibold uppercase tracking-wide text-ink/60">Active Loans</p>
+              <p className="text-xs font-semibold uppercase tracking-wide text-ink/60">{t('dashboard.activeLoans')}</p>
             </div>
             <p className="mt-3 text-2xl font-bold text-gold-600 sm:text-3xl">{metrics.activeCount}</p>
-            <p className="mt-2 text-xs text-ink/60">Including late accounts</p>
+            <p className="mt-2 text-xs text-ink/60">{t('dashboard.includingLate')}</p>
           </motion.div>
           
           <motion.div 
@@ -94,12 +96,12 @@ export const DashboardPage = () => {
           >
             <div className="flex items-center gap-2">
               <IndianRupee className="text-gold-600" size={20} />
-              <p className="text-xs font-semibold uppercase tracking-wide text-ink/60">Total Principal Amount</p>
+              <p className="text-xs font-semibold uppercase tracking-wide text-ink/60">{t('dashboard.totalPrincipal')}</p>
             </div>
             <p className="mt-3 text-2xl font-bold text-gold-600 sm:text-3xl">
               {formatCurrencyCompact(metrics.portfolioValue)}
             </p>
-            <p className="mt-2 text-xs text-ink/60">Principal outstanding</p>
+            <p className="mt-2 text-xs text-ink/60">{t('dashboard.principalOutstanding')}</p>
           </motion.div>
           
           <motion.div 
@@ -111,10 +113,10 @@ export const DashboardPage = () => {
           >
             <div className="flex items-center gap-2">
               <Users className="text-gold-600" size={20} />
-              <p className="text-xs font-semibold uppercase tracking-wide text-ink/60">Total Customers</p>
+              <p className="text-xs font-semibold uppercase tracking-wide text-ink/60">{t('dashboard.totalCustomers')}</p>
             </div>
             <p className="mt-3 text-2xl font-bold text-gold-600 sm:text-3xl">{metrics.customerCount}</p>
-            <p className="mt-2 text-xs text-ink/60">All customers in system</p>
+            <p className="mt-2 text-xs text-ink/60">{t('dashboard.allCustomers')}</p>
           </motion.div>
         </div>
       </section>
@@ -127,13 +129,13 @@ export const DashboardPage = () => {
           transition={{ delay: 0.4, duration: 0.5 }}
         >
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-            <h2 className="font-display text-xl text-ink">Upcoming maturities</h2>
+            <h2 className="font-display text-xl text-ink">{t('dashboard.upcomingMaturities')}</h2>
             <span className="text-xs font-semibold uppercase tracking-wide text-ink/60">
-              {loanState.items.length} total loans
+              {loanState.items.length} {t('dashboard.totalLoans')}
             </span>
           </div>
           {loanState.status === 'loading' && (
-            <p className="mt-3 text-xs text-ink/60">Loading latest loan activity…</p>
+            <p className="mt-3 text-xs text-ink/60">{t('dashboard.loadingLoans')}</p>
           )}
           {loanState.error && (
             <p className="mt-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
@@ -161,11 +163,11 @@ export const DashboardPage = () => {
                 </div>
                 <div className="flex items-center justify-between mt-3 pt-3 border-t border-gold-100">
                   <div>
-                    <p className="text-xs text-ink/60">Principal</p>
+                    <p className="text-xs text-ink/60">{t('dashboard.principal')}</p>
                     <p className="font-semibold text-gold-700">{formatCurrencyCompact(loan.principal)}</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-xs text-ink/60">Due Date</p>
+                    <p className="text-xs text-ink/60">{t('dashboard.dueDate')}</p>
                     <p className={`text-xs font-medium ${dueTone(loan.daysUntilDue, loan.status)}`}>
                       {new Date(loan.dueDate).toLocaleDateString('en-GB')}
                     </p>
@@ -176,7 +178,7 @@ export const DashboardPage = () => {
             {!topLoans.length && (
               <div className="rounded-xl border border-gold-100 bg-white/80 p-8 text-center">
                 <p className="text-sm text-ink/60">
-                  No loans yet — record your first pawn loan to populate the dashboard.
+                  {t('dashboard.noLoans')}
                 </p>
               </div>
             )}
@@ -188,10 +190,10 @@ export const DashboardPage = () => {
               <table className="min-w-full divide-y divide-gold-100 text-sm text-ink/80">
                 <thead className="bg-cream/80 text-left text-xs font-semibold uppercase tracking-wide text-ink/60">
                   <tr>
-                    <th className="px-3 py-2 sm:px-4 sm:py-3">Customer</th>
-                    <th className="px-3 py-2 sm:px-4 sm:py-3">Principal</th>
-                    <th className="px-3 py-2 sm:px-4 sm:py-3">Due date</th>
-                    <th className="px-3 py-2 sm:px-4 sm:py-3">Status</th>
+                    <th className="px-3 py-2 sm:px-4 sm:py-3">{t('dashboard.customer')}</th>
+                    <th className="px-3 py-2 sm:px-4 sm:py-3">{t('dashboard.principal')}</th>
+                    <th className="px-3 py-2 sm:px-4 sm:py-3">{t('dashboard.dueDate')}</th>
+                    <th className="px-3 py-2 sm:px-4 sm:py-3">{t('dashboard.status')}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gold-50 bg-white/60">
@@ -217,8 +219,8 @@ export const DashboardPage = () => {
                       <td className={`px-3 py-3 sm:px-4 sm:py-4 text-xs ${dueTone(loan.daysUntilDue, loan.status)}`}>
                         {new Date(loan.dueDate).toLocaleDateString('en-GB')} ({
                           loan.daysUntilDue >= 0
-                            ? `${loan.daysUntilDue} days`
-                            : `${Math.abs(loan.daysUntilDue)} days late`
+                            ? `${loan.daysUntilDue} ${t('dashboard.days')}`
+                            : `${Math.abs(loan.daysUntilDue)} ${t('dashboard.daysLate')}`
                         })
                       </td>
                       <td className="px-3 py-3 sm:px-4 sm:py-4">
@@ -229,7 +231,7 @@ export const DashboardPage = () => {
                   {!topLoans.length && (
                     <tr>
                       <td colSpan={4} className="px-4 py-10 text-center text-sm text-ink/60">
-                        No loans yet — record your first pawn loan to populate the dashboard.
+                        {t('dashboard.noLoans')}
                       </td>
                     </tr>
                   )}
@@ -245,13 +247,13 @@ export const DashboardPage = () => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.4, duration: 0.5 }}
         >
-          <h2 className="font-display text-xl text-ink">Loan health snapshot</h2>
+          <h2 className="font-display text-xl text-ink">{t('dashboard.loanHealth')}</h2>
           <p className="mt-2 text-sm text-ink/70">
-            Use these quick stats to prioritise outreach, renewals, and redemption offers.
+            {t('dashboard.loanHealthDesc')}
           </p>
           <dl className="mt-6 space-y-4 text-sm">
             <div className="flex items-center justify-between rounded-xl border border-gold-100 bg-cream/70 px-3 py-2 sm:px-4 sm:py-3">
-              <dt className="font-semibold text-ink">Current yield</dt>
+              <dt className="font-semibold text-ink">{t('dashboard.currentYield')}</dt>
               <dd className="text-gold-600">
                 {loanState.items.length
                   ? `${(
@@ -263,19 +265,19 @@ export const DashboardPage = () => {
               </dd>
             </div>
             <div className="flex items-center justify-between rounded-xl border border-gold-100 bg-cream/70 px-3 py-2 sm:px-4 sm:py-3">
-              <dt className="font-semibold text-ink">Late accounts</dt>
+              <dt className="font-semibold text-ink">{t('dashboard.lateAccounts')}</dt>
               <dd className="text-red-600">
                 {loanState.items.filter((loan) => loan.status === 'LATE').length}
               </dd>
             </div>
             <div className="flex items-center justify-between rounded-xl border border-gold-100 bg-cream/70 px-3 py-2 sm:px-4 sm:py-3">
-              <dt className="font-semibold text-ink">Redeemed YTD</dt>
+              <dt className="font-semibold text-ink">{t('dashboard.redeemedYTD')}</dt>
               <dd className="text-emerald-600">
                 {loanState.items.filter((loan) => loan.status === 'REDEEMED').length}
               </dd>
             </div>
             <div className="flex items-center justify-between rounded-xl border border-gold-100 bg-cream/70 px-3 py-2 sm:px-4 sm:py-3">
-              <dt className="font-semibold text-ink">Defaulted YTD</dt>
+              <dt className="font-semibold text-ink">{t('dashboard.defaultedYTD')}</dt>
               <dd className="text-slate-600">
                 {loanState.items.filter((loan) => loan.status === 'DEFAULTED').length}
               </dd>

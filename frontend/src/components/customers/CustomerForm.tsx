@@ -3,21 +3,11 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import { User, Phone } from 'lucide-react'
 
 import type { UpsertCustomerPayload } from '../../features/customers/types'
 import { AnimatedButton } from '../animations/AnimatedButton'
-
-const schema = z.object({
-  firstName: z.string().min(1, 'First name is required'),
-  lastName: z.string().min(1, 'Last name is required'),
-  phone: z
-    .string()
-    .min(7, 'Phone number is required')
-    .regex(/^[0-9+()\-\s]+$/, 'Enter a valid phone number'),
-})
-
-type FormValues = z.infer<typeof schema>
 
 interface CustomerFormProps {
   defaultValues?: UpsertCustomerPayload
@@ -30,12 +20,25 @@ interface CustomerFormProps {
 
 export const CustomerForm = ({
   defaultValues,
-  submitLabel = 'Save customer',
+  submitLabel,
   isSubmitting = false,
   clearOnSuccess = false,
   onSubmit,
   onCancel,
 }: CustomerFormProps) => {
+  const { t } = useTranslation()
+  
+  const schema = z.object({
+    firstName: z.string().min(1, t('customer.firstNameRequired')),
+    lastName: z.string().min(1, t('customer.lastNameRequired')),
+    phone: z
+      .string()
+      .min(7, t('customer.phoneRequired'))
+      .regex(/^[0-9+()\-\s]+$/, t('customer.phoneInvalid')),
+  })
+
+  type FormValues = z.infer<typeof schema>
+
   const {
     register,
     handleSubmit,
@@ -45,6 +48,8 @@ export const CustomerForm = ({
     resolver: zodResolver(schema),
     defaultValues,
   })
+  
+  const defaultSubmitLabel = submitLabel || t('customer.saveCustomer')
 
   useEffect(() => {
     if (defaultValues) {
@@ -87,7 +92,7 @@ export const CustomerForm = ({
         >
           <label className="flex items-center gap-2 text-xs font-semibold uppercase text-ink/60" htmlFor="firstName">
             <User size={14} />
-            First name
+            {t('customer.firstName')}
           </label>
           <input
             id="firstName"
@@ -113,7 +118,7 @@ export const CustomerForm = ({
         >
           <label className="flex items-center gap-2 text-xs font-semibold uppercase text-ink/60" htmlFor="lastName">
             <User size={14} />
-            Last name
+            {t('customer.lastName')}
           </label>
           <input
             id="lastName"
@@ -140,13 +145,13 @@ export const CustomerForm = ({
       >
         <label className="flex items-center gap-2 text-xs font-semibold uppercase text-ink/60" htmlFor="phone">
           <Phone size={14} />
-          Phone Number
+          {t('customer.phoneNumber')}
         </label>
         <input
           id="phone"
           type="tel"
           className="mt-1 w-full rounded-xl border border-gold-200 bg-cream px-3 py-2 text-sm focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200 transition-all duration-300"
-          placeholder="+91 98765 43210"
+          placeholder={t('customer.phonePlaceholder')}
           {...register('phone')}
         />
         {errors.phone && (
@@ -171,7 +176,7 @@ export const CustomerForm = ({
           isLoading={isSubmitting}
           className="w-full sm:w-auto"
         >
-          {submitLabel}
+          {defaultSubmitLabel}
         </AnimatedButton>
         
         {onCancel && (
@@ -181,7 +186,7 @@ export const CustomerForm = ({
             onClick={onCancel}
             className="w-full sm:w-auto"
           >
-            Cancel
+            {t('common.cancel')}
           </AnimatedButton>
         )}
       </motion.div>

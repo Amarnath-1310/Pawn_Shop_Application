@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Edit, Trash2, Users, CheckCircle, AlertCircle } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import {
   createCustomer,
@@ -21,6 +22,7 @@ type Feedback = { type: 'success' | 'error'; message: string } | null
 
 export const CustomersPage = () => {
   const dispatch = useAppDispatch()
+  const { t } = useTranslation()
   const { items, status, error } = useAppSelector(selectCustomers)
   const [editing, setEditing] = useState<Customer | null>(null)
   const [feedback, setFeedback] = useState<Feedback>(null)
@@ -126,7 +128,7 @@ export const CustomersPage = () => {
                 transition={{ delay: 0.3, duration: 0.5 }}
               >
                 <Users className="text-gold-600" size={28} />
-                Customer Directory
+                {t('customersPage.title')}
               </motion.h1>
               <motion.p 
                 className="mt-2 max-w-2xl text-sm text-ink/70"
@@ -134,7 +136,7 @@ export const CustomersPage = () => {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.4, duration: 0.5 }}
               >
-                Maintain up-to-date records for every client so you can tie pawn loans, redemptions, and compliance audits back to individuals instantly.
+                {t('customersPage.description')}
               </motion.p>
             </div>
             <motion.span 
@@ -144,7 +146,7 @@ export const CustomersPage = () => {
               transition={{ delay: 0.5, duration: 0.4, type: 'spring' }}
             >
               <Users size={14} />
-              {items.length} customers
+              {items.length} {t('customersPage.customers')}
             </motion.span>
           </motion.div>
 
@@ -160,9 +162,9 @@ export const CustomersPage = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.7, duration: 0.5 }}
             >
-              <h2 className="text-lg font-semibold text-ink">Add customer</h2>
+              <h2 className="text-lg font-semibold text-ink">{t('customersPage.addCustomer')}</h2>
               <p className="mb-4 mt-1 text-xs uppercase tracking-wide text-ink/60">
-                Use this form to capture a new customer profile.
+                {t('customersPage.addCustomerDesc')}
               </p>
               <CustomerForm 
                 onSubmit={handleCreate} 

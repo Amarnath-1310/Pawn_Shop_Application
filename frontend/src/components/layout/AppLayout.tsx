@@ -1,11 +1,14 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import { BarChart3, Users, IndianRupee, CreditCard, FileText, LogOut, Sun, Moon } from 'lucide-react'
 import { BottomNavigation } from './BottomNavigation'
+import { LanguageSwitcher } from './LanguageSwitcher'
 
 export const AppLayout = () => {
   const navigate = useNavigate()
+  const { t } = useTranslation()
   const [darkMode, setDarkMode] = useState(false)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
 
@@ -47,8 +50,9 @@ export const AppLayout = () => {
 
   const handleLogout = useCallback(() => {
     localStorage.removeItem('auth')
+    localStorage.removeItem('token')
     setIsAuthenticated(false)
-    navigate('/login', { replace: true })
+    navigate('/signin', { replace: true })
   }, [navigate])
 
   return (
@@ -60,8 +64,8 @@ export const AppLayout = () => {
               <span className="text-base font-semibold text-white sm:text-lg">A²</span>
             </div>
             <div className="font-display text-base text-ink dark:text-white sm:text-xl">
-              <span className="hidden sm:inline">Abi & Amar Pawn Shop</span>
-              <span className="sm:hidden">PawnShop</span>
+              <span className="hidden sm:inline">{t('app.name')}</span>
+              <span className="sm:hidden">{t('app.shortName')}</span>
             </div>
           </Link>
 
@@ -74,7 +78,7 @@ export const AppLayout = () => {
               }
             >
               <BarChart3 size={16} />
-              <span>Dashboard</span>
+              <span>{t('common.dashboard')}</span>
             </NavLink>
             <NavLink
               to="/customers"
@@ -83,7 +87,7 @@ export const AppLayout = () => {
               }
             >
               <Users size={16} />
-              <span>Customers</span>
+              <span>{t('common.customers')}</span>
             </NavLink>
             <NavLink
               to="/loans/new"
@@ -92,7 +96,7 @@ export const AppLayout = () => {
               }
             >
               <IndianRupee size={16} />
-              <span>New Loan</span>
+              <span>{t('common.newLoan')}</span>
             </NavLink>
             <NavLink
               to="/repayments/new"
@@ -101,7 +105,7 @@ export const AppLayout = () => {
               }
             >
               <CreditCard size={16} />
-              <span>Payment</span>
+              <span>{t('common.payment')}</span>
             </NavLink>
             <NavLink
               to="/reports"
@@ -110,8 +114,9 @@ export const AppLayout = () => {
               }
             >
               <FileText size={16} />
-              <span>Reports</span>
+              <span>{t('common.reports')}</span>
             </NavLink>
+            <LanguageSwitcher />
             <motion.button
               onClick={toggleDarkMode}
               className="rounded-full p-1.5 text-gray-600 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-700 sm:p-2 transition-all duration-300 hover:scale-110"
@@ -130,20 +135,21 @@ export const AppLayout = () => {
                 whileTap={{ scale: 0.95 }}
               >
                 <LogOut size={14} />
-                <span>Logout</span>
+                <span>{t('common.logout')}</span>
               </motion.button>
             ) : (
               <Link
-                to="/login"
+                to="/signin"
                 className="rounded-full bg-gold-500 px-3 py-1 text-xs font-semibold text-white shadow-card transition-all duration-300 hover:bg-gold-600 hover:scale-105 sm:px-4 sm:py-1 sm:text-sm"
               >
-                Sign In
+                {t('common.signIn')}
               </Link>
             )}
           </nav>
 
           {/* Mobile Menu Button & Actions */}
           <div className="flex items-center gap-2 md:hidden">
+            <LanguageSwitcher />
             <motion.button
               onClick={toggleDarkMode}
               className="rounded-full p-2 text-gray-600 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-700 transition-all duration-300"
@@ -165,10 +171,10 @@ export const AppLayout = () => {
               </motion.button>
             ) : (
               <Link
-                to="/login"
+                to="/signin"
                 className="rounded-full bg-gold-500 px-3 py-2 text-xs font-semibold text-white shadow-card transition-all duration-300 hover:bg-gold-600"
               >
-                Sign In
+                {t('common.signIn')}
               </Link>
             )}
           </div>
@@ -178,7 +184,7 @@ export const AppLayout = () => {
       <main className="mx-auto flex max-w-6xl grow flex-col px-4 py-4 pb-20 sm:px-6 sm:py-6 md:pb-10">
         {isAuthenticated && (
           <div className="mb-4 rounded-lg border border-gold-200 bg-white/70 px-3 py-2 text-xs text-ink/80 shadow-sm dark:border-gray-700 dark:bg-gray-800/70 dark:text-gray-200 sm:mb-6 sm:px-4 sm:py-3 sm:text-sm">
-            Welcome back, <span className="font-semibold text-ink dark:text-white">Siva Kumar</span>.
+            {t('common.welcome')}, <span className="font-semibold text-ink dark:text-white">Siva Kumar</span>.
           </div>
         )}
         <Outlet />
@@ -189,8 +195,8 @@ export const AppLayout = () => {
 
       <footer className="border-t border-gold-200 bg-white/60 dark:border-gray-700 dark:bg-gray-800/60 pb-16 md:pb-0">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-2 px-4 py-3 text-xs text-ink/60 dark:text-gray-400 sm:flex-row sm:px-6 sm:py-4">
-          <span>© {new Date().getFullYear()} Abi & Amar Pawn Shop</span>
-          <span className="text-center sm:text-left">Secure pawn management for modern brokers</span>
+          <span>© {new Date().getFullYear()} {t('app.name')}</span>
+          <span className="text-center sm:text-left">{t('app.footer')}</span>
         </div>
       </footer>
     </div>

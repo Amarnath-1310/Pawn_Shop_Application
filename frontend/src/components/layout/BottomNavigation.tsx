@@ -1,13 +1,15 @@
 import { NavLink } from 'react-router-dom'
 import { Home, Users, CreditCard, FileText, Settings } from 'lucide-react'
 import { motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 
 export const BottomNavigation = () => {
+  const { t } = useTranslation()
   const navItems = [
-    { to: '/dashboard', icon: Home, label: 'Home' },
-    { to: '/customers', icon: Users, label: 'Customers' },
-    { to: '/loans/new', icon: CreditCard, label: 'Loans' },
-    { to: '/reports', icon: FileText, label: 'Reports' },
+    { to: '/dashboard', icon: Home, label: t('common.dashboard') },
+    { to: '/customers', icon: Users, label: t('common.customers') },
+    { to: '/loans/new', icon: CreditCard, label: t('common.loans') },
+    { to: '/reports', icon: FileText, label: t('common.reports') },
     { to: '/settings', icon: Settings, label: 'Settings' }
   ]
 

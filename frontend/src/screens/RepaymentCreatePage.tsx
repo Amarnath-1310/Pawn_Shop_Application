@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { CreditCard, CheckCircle, AlertCircle } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import { fetchLoans, selectLoans } from '../features/loans/loanSlice'
 import { fetchCustomers, selectCustomers } from '../features/customers/customerSlice'
@@ -16,6 +17,7 @@ type Feedback = { type: 'success' | 'error'; message: string } | null
 
 export const RepaymentCreatePage = () => {
   const dispatch = useAppDispatch()
+  const { t } = useTranslation()
   const loanState = useAppSelector(selectLoans)
   const customerState = useAppSelector(selectCustomers)
   const [feedback, setFeedback] = useState<Feedback>(null)
@@ -95,10 +97,10 @@ export const RepaymentCreatePage = () => {
           >
             <h1 className="font-display text-2xl text-ink sm:text-3xl flex items-center gap-2">
               <CreditCard className="text-gold-600" size={28} />
-              Record a repayment
+              {t('repayment.title')}
             </h1>
             <p className="mt-2 max-w-2xl text-sm text-ink/70">
-              Track customer payments against outstanding pawn loans. Balances update automatically and overdue accounts trigger alerts across the dashboard.
+              {t('repayment.description')}
             </p>
           </motion.div>
 
@@ -144,7 +146,7 @@ export const RepaymentCreatePage = () => {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.4 }}
               >
-                All loans are redeemed — create a new loan before recording repayments.
+                {t('repayment.noActiveLoans')}
               </motion.p>
             )}
           </motion.div>
