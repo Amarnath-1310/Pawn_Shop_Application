@@ -148,7 +148,7 @@ export const LoanForm = ({ customers, defaultValues, isSubmitting = false, clear
                 id="customer-search"
                 type="text"
                 placeholder={t('loan.typeCustomerName')}
-                className="w-full rounded-xl border border-gold-200 bg-cream pl-10 pr-3 py-2 text-sm focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white transition-all duration-300"
+                className="w-full rounded-xl border border-gold-200 bg-cream pl-10 pr-3 py-2 text-sm text-black focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white transition-all duration-300"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 onFocus={() => searchTerm && setShowSuggestions(true)}
@@ -213,7 +213,7 @@ export const LoanForm = ({ customers, defaultValues, isSubmitting = false, clear
           <input
             id="itemDescription"
             type="text"
-            className="mt-1 w-full rounded-xl border border-gold-200 bg-cream px-3 py-2 text-sm focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 transition-all duration-300"
+            className="mt-1 w-full rounded-xl border border-gold-200 bg-cream px-3 py-2 text-sm text-black focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 transition-all duration-300"
             {...register('itemDescription')}
             placeholder={t('loan.itemPlaceholder')}
           />
@@ -234,7 +234,7 @@ export const LoanForm = ({ customers, defaultValues, isSubmitting = false, clear
             id="principal"
             type="number"
             step="0.01"
-            className="mt-1 w-full rounded-xl border border-gold-200 bg-cream px-3 py-2 text-sm focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 transition-all duration-300"
+            className="mt-1 w-full rounded-xl border border-gold-200 bg-cream px-3 py-2 text-sm text-black focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 transition-all duration-300"
             {...register('principal', { valueAsNumber: true })}
             placeholder="1000.00"
           />
@@ -254,7 +254,7 @@ export const LoanForm = ({ customers, defaultValues, isSubmitting = false, clear
             step="1"
             min="0"
             max="100"
-            className="mt-1 w-full rounded-xl border border-gold-200 bg-cream px-3 py-2 text-sm focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 transition-all duration-300"
+            className="mt-1 w-full rounded-xl border border-gold-200 bg-cream px-3 py-2 text-sm text-black focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 transition-all duration-300"
             {...register('interestRate', { valueAsNumber: true })}
             placeholder="3"
           />
@@ -273,7 +273,7 @@ export const LoanForm = ({ customers, defaultValues, isSubmitting = false, clear
         <input
           id="startDate"
           type="date"
-          className="mt-1 w-full rounded-xl border border-gold-200 bg-cream px-3 py-2 text-sm focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 transition-all duration-300"
+          className="mt-1 w-full rounded-xl border border-gold-200 bg-cream px-3 py-2 text-sm text-black focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 transition-all duration-300"
           {...register('startDate')}
         />
         {errors.startDate && <p className="mt-1 text-xs text-red-600 dark:text-red-400">{errors.startDate.message}</p>}
@@ -290,7 +290,7 @@ export const LoanForm = ({ customers, defaultValues, isSubmitting = false, clear
         <textarea
           id="notes"
           rows={3}
-          className="mt-1 w-full rounded-xl border border-gold-200 bg-cream px-3 py-2 text-sm focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 transition-all duration-300"
+          className="mt-1 w-full rounded-xl border border-gold-200 bg-cream px-3 py-2 text-sm text-black focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 transition-all duration-300"
           {...register('notes')}
           placeholder={t('loan.notesPlaceholder')}
         />

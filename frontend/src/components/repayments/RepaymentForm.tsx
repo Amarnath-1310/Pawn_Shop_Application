@@ -180,7 +180,7 @@ export const RepaymentForm = ({ loans, customers, defaultValues, isSubmitting = 
               id="customer-search"
               type="text"
               placeholder="Type customer name..."
-              className="w-full rounded-xl border border-gold-200 bg-cream pl-10 pr-3 py-2 text-sm focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200 transition-all duration-300"
+              className="w-full rounded-xl border border-gold-200 bg-cream pl-10 pr-3 py-2 text-sm text-black focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200 transition-all duration-300"
               value={searchTerm}
               onChange={(e) => {
                 setSearchTerm(e.target.value)
@@ -360,7 +360,7 @@ export const RepaymentForm = ({ loans, customers, defaultValues, isSubmitting = 
           <input
             id="paidAt"
             type="date"
-            className="mt-1 w-full rounded-xl border border-gold-200 bg-cream px-3 py-2 text-sm focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200 transition-all duration-300"
+            className="mt-1 w-full rounded-xl border border-gold-200 bg-cream px-3 py-2 text-sm text-black focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200 transition-all duration-300"
             {...register('paidAt')}
           />
         </motion.div>
@@ -378,7 +378,7 @@ export const RepaymentForm = ({ loans, customers, defaultValues, isSubmitting = 
             id="reference"
             type="text"
             placeholder="Optional receipt or transaction ID"
-            className="mt-1 w-full rounded-xl border border-gold-200 bg-cream px-3 py-2 text-sm focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200 transition-all duration-300"
+            className="mt-1 w-full rounded-xl border border-gold-200 bg-cream px-3 py-2 text-sm text-black focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200 transition-all duration-300"
             {...register('reference')}
           />
         </motion.div>
@@ -397,7 +397,7 @@ export const RepaymentForm = ({ loans, customers, defaultValues, isSubmitting = 
           id="notes"
           rows={3}
           placeholder="Optional notes for this repayment"
-          className="mt-1 w-full rounded-xl border border-gold-200 bg-cream px-3 py-2 text-sm focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200 transition-all duration-300"
+          className="mt-1 w-full rounded-xl border border-gold-200 bg-cream px-3 py-2 text-sm text-black focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200 transition-all duration-300"
           {...register('notes')}
         />
         {errors.notes && <p className="mt-1 text-xs text-red-600">{errors.notes.message}</p>}

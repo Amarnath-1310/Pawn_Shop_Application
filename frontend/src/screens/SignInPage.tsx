@@ -57,7 +57,7 @@ export const SignInPage = () => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-xl border border-gold-200 bg-cream px-3 py-2 text-sm text-ink shadow-inner focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200 sm:px-4 sm:py-2 transition-all duration-300"
+              className="w-full rounded-xl border border-gold-200 bg-cream px-3 py-2 text-sm text-black shadow-inner focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200 sm:px-4 sm:py-2 transition-all duration-300"
               placeholder={t('signin.emailPlaceholder')}
               autoComplete="email"
               required

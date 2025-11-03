@@ -97,7 +97,7 @@ export const CustomerForm = ({
           <input
             id="firstName"
             type="text"
-            className="mt-1 w-full rounded-xl border border-gold-200 bg-cream px-3 py-2 text-sm focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200 transition-all duration-300"
+            className="mt-1 w-full rounded-xl border border-gold-200 bg-cream px-3 py-2 text-sm text-black focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200 transition-all duration-300"
             {...register('firstName')}
           />
           {errors.firstName && (
@@ -123,7 +123,7 @@ export const CustomerForm = ({
           <input
             id="lastName"
             type="text"
-            className="mt-1 w-full rounded-xl border border-gold-200 bg-cream px-3 py-2 text-sm focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200 transition-all duration-300"
+            className="mt-1 w-full rounded-xl border border-gold-200 bg-cream px-3 py-2 text-sm text-black focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200 transition-all duration-300"
             {...register('lastName')}
           />
           {errors.lastName && (
@@ -150,7 +150,7 @@ export const CustomerForm = ({
         <input
           id="phone"
           type="tel"
-          className="mt-1 w-full rounded-xl border border-gold-200 bg-cream px-3 py-2 text-sm focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200 transition-all duration-300"
+          className="mt-1 w-full rounded-xl border border-gold-200 bg-cream px-3 py-2 text-sm text-black focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200 transition-all duration-300"
           placeholder={t('customer.phonePlaceholder')}
           {...register('phone')}
         />
