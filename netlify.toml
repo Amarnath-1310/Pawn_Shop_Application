@@ -7,6 +7,9 @@
   
   # Publish directory (relative to base)
   publish = "dist"
+  
+  # Functions directory (relative to repo root)
+  functions = "netlify/functions"
 
 [build.environment]
   # Node.js version
@@ -15,7 +18,48 @@
   # NPM version
   NPM_VERSION = "9"
 
-# Redirect rules for SPA (Single Page Application)
+# API redirects to serverless functions (MUST come before SPA redirect)
+[[redirects]]
+  from = "/api/migrate"
+  to = "/.netlify/functions/migrate"
+  status = 200
+
+[[redirects]]
+  from = "/api/customers/*"
+  to = "/.netlify/functions/customers/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/api/customers"
+  to = "/.netlify/functions/customers"
+  status = 200
+
+[[redirects]]
+  from = "/api/loans/*"
+  to = "/.netlify/functions/loans/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/api/loans"
+  to = "/.netlify/functions/loans"
+  status = 200
+
+[[redirects]]
+  from = "/api/repayments"
+  to = "/.netlify/functions/repayments"
+  status = 200
+
+[[redirects]]
+  from = "/api/reports"
+  to = "/.netlify/functions/reports"
+  status = 200
+
+[[redirects]]
+  from = "/api/dashboard"
+  to = "/.netlify/functions/dashboard"
+  status = 200
+
+# SPA redirect (MUST be last)
 [[redirects]]
   from = "/*"
   to = "/index.html"
@@ -32,6 +76,14 @@
   [headers.values]
     Content-Type = "application/javascript"
     Service-Worker-Allowed = "/"
+
+# CORS headers for API functions
+[[headers]]
+  for = "/.netlify/functions/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Methods = "GET, POST, PUT, DELETE, OPTIONS, PATCH"
+    Access-Control-Allow-Headers = "Content-Type, Authorization"
 
 [[headers]]
   for = "/*"
