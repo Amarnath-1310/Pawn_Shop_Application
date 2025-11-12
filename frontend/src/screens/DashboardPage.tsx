@@ -38,10 +38,11 @@ export const DashboardPage = () => {
   }, [t])
 
   const metrics = useMemo(() => {
-    const activeLoans = loanState.items.filter((loan) => loan.status === 'ACTIVE' || loan.status === 'LATE')
+    const items = loanState.items || []
+    const activeLoans = items.filter((loan) => loan.status === 'ACTIVE' || loan.status === 'LATE')
     const portfolioValue = activeLoans.reduce((total, loan) => total + loan.principal, 0)
     const dueSoon = activeLoans.filter((loan) => loan.daysUntilDue <= 7)
-    const totalCustomers = loanState.items.reduce((unique, loan) => {
+    const totalCustomers = items.reduce((unique, loan) => {
       unique.add(loan.customerId)
       return unique
     }, new Set()).size
@@ -267,19 +268,19 @@ export const DashboardPage = () => {
             <div className="flex items-center justify-between rounded-xl border border-gold-100 bg-cream/70 px-3 py-2 sm:px-4 sm:py-3">
               <dt className="font-semibold text-ink">{t('dashboard.lateAccounts')}</dt>
               <dd className="text-red-600">
-                {loanState.items.filter((loan) => loan.status === 'LATE').length}
+                {(loanState.items || []).filter((loan) => loan.status === 'LATE').length}
               </dd>
             </div>
             <div className="flex items-center justify-between rounded-xl border border-gold-100 bg-cream/70 px-3 py-2 sm:px-4 sm:py-3">
               <dt className="font-semibold text-ink">{t('dashboard.redeemedYTD')}</dt>
               <dd className="text-emerald-600">
-                {loanState.items.filter((loan) => loan.status === 'REDEEMED').length}
+                {(loanState.items || []).filter((loan) => loan.status === 'REDEEMED').length}
               </dd>
             </div>
             <div className="flex items-center justify-between rounded-xl border border-gold-100 bg-cream/70 px-3 py-2 sm:px-4 sm:py-3">
               <dt className="font-semibold text-ink">{t('dashboard.defaultedYTD')}</dt>
               <dd className="text-slate-600">
-                {loanState.items.filter((loan) => loan.status === 'DEFAULTED').length}
+                {(loanState.items || []).filter((loan) => loan.status === 'DEFAULTED').length}
               </dd>
             </div>
           </dl>

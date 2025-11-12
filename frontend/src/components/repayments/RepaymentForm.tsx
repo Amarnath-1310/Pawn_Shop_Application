@@ -66,7 +66,7 @@ export const RepaymentForm = ({ loans, customers, defaultValues, isSubmitting = 
   const selectedLoan = loans.find(loan => loan.id === loanId)
 
   // Filter customers based on search term
-  const filteredCustomers = customers.filter(customer =>
+  const filteredCustomers = (customers || []).filter(customer =>
     `${customer.firstName} ${customer.lastName}`.toLowerCase().includes(searchTerm.toLowerCase())
   )
   
@@ -77,7 +77,7 @@ export const RepaymentForm = ({ loans, customers, defaultValues, isSubmitting = 
     setShowSuggestions(false)
     
     // Filter loans for this customer
-    const customerActiveLoans = loans.filter(loan => 
+    const customerActiveLoans = (loans || []).filter(loan => 
       loan.customerId === customer.id && loan.status !== 'REDEEMED'
     )
     setCustomerLoans(customerActiveLoans)

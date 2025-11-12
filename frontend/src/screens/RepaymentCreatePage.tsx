@@ -32,7 +32,7 @@ export const RepaymentCreatePage = () => {
   }, [dispatch, loanState.status, customerState.status])
 
   const activeLoans = useMemo(
-    () => loanState.items.filter((loan) => loan.status !== 'REDEEMED'),
+    () => (loanState.items || []).filter((loan) => loan.status !== 'REDEEMED'),
     [loanState.items],
   )
 

@@ -65,7 +65,7 @@ export const LoanForm = ({ customers, defaultValues, isSubmitting = false, clear
       setShowSuggestions(false)
     } else {
       const term = searchTerm.toLowerCase()
-      const filtered = customers.filter(
+      const filtered = (customers || []).filter(
         customer =>
           customer.firstName.toLowerCase().includes(term) ||
           customer.lastName.toLowerCase().includes(term)
