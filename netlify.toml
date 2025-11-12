@@ -8,8 +8,8 @@
   # Publish directory (relative to base)
   publish = "dist"
   
-  # Functions directory (relative to repo root)
-  functions = "netlify/functions"
+  # Functions directory (relative to base directory)
+  functions = "../netlify/functions"
 
 [build.environment]
   # Node.js version
